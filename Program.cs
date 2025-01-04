@@ -20,7 +20,7 @@ builder.Services.AddDbContext<AuthAppDbContext>(options => options.UseSqlServer(
 	builder.Configuration.GetConnectionString("AutApp")
 ));
 
-builder.Services.AddScoped<IEncryptionService, EncryptionRepository>();
+builder.Services.AddScoped<ICryptionService, CryptionRepository>();
 builder.Services.AddScoped<IUserOperationsService, UserOperationsRepository>();
 builder.Services.AddScoped<IFrontendEncryption, FrontendEncryptionRepository>();
 

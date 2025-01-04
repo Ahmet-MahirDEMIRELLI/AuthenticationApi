@@ -1,6 +1,5 @@
 ﻿using AuthenticationApi.Classes;
 using AuthenticationApi.Interfaces;
-using Microsoft.Extensions.Options;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Encodings;
 using Org.BouncyCastle.Crypto.Engines;
@@ -11,10 +10,10 @@ using System.Text;
 
 namespace AuthenticationApi.Repositories
 {
-	public class EncryptionRepository : IEncryptionService
+	public class CryptionRepository : ICryptionService
 	{
 		private readonly string _backendPrivateKeyPath = "Resources/Keys/backendPrivate.pem";
-		public EncryptionRepository() {}
+		public CryptionRepository() { }
 		public string Decrypt(string cipherText)
 		{
 			try

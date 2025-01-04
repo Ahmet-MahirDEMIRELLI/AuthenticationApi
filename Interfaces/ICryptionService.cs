@@ -2,7 +2,7 @@
 
 namespace AuthenticationApi.Interfaces
 {
-	public interface IEncryptionService
+	public interface ICryptionService
 	{
 		string Hash(string password);
 		User DecryptUser(User cipherUser);

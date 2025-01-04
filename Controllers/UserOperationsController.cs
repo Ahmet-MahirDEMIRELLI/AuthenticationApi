@@ -5,14 +5,15 @@ using Microsoft.AspNetCore.Mvc;
 namespace AuthenticationApi.Controllers
 {
 	[ApiController]
-	public class UserOperationsController : Controller
+	[Route("api/[controller]")]
+	public class UserOperationsController : ControllerBase
 	{
 		private readonly IUserOperationsService _userOperationsService;
-		private readonly IEncryptionService _encryptionService;
-		public UserOperationsController(IUserOperationsService userOperationsService, IEncryptionService encryptionService)
+		private readonly ICryptionService _cryptionService;
+		public UserOperationsController(IUserOperationsService userOperationsService, ICryptionService cryptionService)
 		{
 			_userOperationsService = userOperationsService;
-			_encryptionService = encryptionService;
+			_cryptionService = cryptionService;
 		}
 
 		[HttpPost("sign-up")]
@@ -25,11 +26,11 @@ namespace AuthenticationApi.Controllers
 				return BadRequest("Empty Field");
 			}
 
-			User plainUser = _encryptionService.DecryptUser(cipherUser);
+			User plainUser = _cryptionService.DecryptUser(cipherUser);
 			string answer = await _userOperationsService.DoesExists(plainUser.Email, plainUser.UserName);
 			if (answer.Equals("ok"))
 			{
-				plainUser.Password = _encryptionService.Hash(plainUser.Password);
+				plainUser.Password = _cryptionService.Hash(plainUser.Password);
 				var newUser = await _userOperationsService.AddUser(plainUser);
 				if (newUser != null)
 				{
@@ -56,12 +57,12 @@ namespace AuthenticationApi.Controllers
 				return BadRequest("Empty Fields");
 			}
 
-			LoginRequest plainRequest = _encryptionService.DecryptLoginRequest(cipherRequest);
+			LoginRequest plainRequest = _cryptionService.DecryptLoginRequest(cipherRequest);
 			if (await _userOperationsService.IsAlreadyLoggedIn(plainRequest.UserName))
 			{
 				return BadRequest("Already Logged In");
 			}
-			plainRequest.Password = _encryptionService.Hash(plainRequest.Password);
+			plainRequest.Password = _cryptionService.Hash(plainRequest.Password);
 			var user = await _userOperationsService.Login(plainRequest);
 			if (user != null)
 			{
@@ -91,7 +92,7 @@ namespace AuthenticationApi.Controllers
 				return BadRequest("Empty Field");
 			}
 
-			LogOutRequest plainRequest = _encryptionService.DecryptLogOutRequest(cipherRequest);
+			LogOutRequest plainRequest = _cryptionService.DecryptLogOutRequest(cipherRequest);
 			var loggedUser = await _userOperationsService.GetLoggedUser(plainRequest);
 			if (loggedUser != null)
 			{

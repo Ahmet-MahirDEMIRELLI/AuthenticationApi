@@ -5,7 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace AuthenticationApi.Controllers
 {
 	[ApiController]
-	public class FrontendEncryptionController : Controller
+	[Route("api/[controller]")]
+	public class FrontendEncryptionController : ControllerBase
 	{
 		private readonly IFrontendEncryption _frontendEncryptionService;
 		public FrontendEncryptionController(IFrontendEncryption frontendEncryptionService)
@@ -14,6 +15,8 @@ namespace AuthenticationApi.Controllers
 		}
 
 		[HttpPost("get-encrypted-user")]
+		[ProducesResponseType(typeof(User), 200)]
+		[ProducesResponseType(500)]
 		public IActionResult GetEncryptedUserAsync([FromBody] User plainUser)
 		{
 			User cipherUser = _frontendEncryptionService.EncryptUser(plainUser);
@@ -25,6 +28,8 @@ namespace AuthenticationApi.Controllers
 		}
 
 		[HttpPost("get-encrypted-login-request")]
+		[ProducesResponseType(typeof(LoginRequest), 200)]
+		[ProducesResponseType(500)]
 		public IActionResult GetEncryptedLoginRequestAsync([FromBody] LoginRequest plainRequest)
 		{
 			LoginRequest cipherRequest = _frontendEncryptionService.EncryptLoginRequest(plainRequest);
@@ -36,6 +41,8 @@ namespace AuthenticationApi.Controllers
 		}
 
 		[HttpPost("get-encrypted-logout-request")]
+		[ProducesResponseType(typeof(LogOutRequest), 200)]
+		[ProducesResponseType(500)]
 		public IActionResult GetEncryptedLogOutRequestAsync([FromBody] LogOutRequest plainRequest)
 		{
 			LogOutRequest cipherRequest = _frontendEncryptionService.EncryptLogOutRequest(plainRequest);
