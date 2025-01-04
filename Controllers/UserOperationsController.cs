@@ -109,8 +109,8 @@ namespace AuthenticationApi.Controllers
 			{
 				return BadRequest("Empty Field");
 			}
-
-			var userInfo = await _userOperationsService.GetUserInfo(new GetMyInfoRequest() { UserId = id, SpecialCode = specialCode });
+			var plainRequest = new GetMyInfoRequest() { UserId = id, SpecialCode = _cryptionService.Decrypt(specialCode) };
+			var userInfo = await _userOperationsService.GetUserInfo(plainRequest);
 			if (userInfo != null)
 			{
 				return Ok(userInfo);

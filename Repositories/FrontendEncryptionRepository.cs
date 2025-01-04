@@ -45,7 +45,7 @@ namespace AuthenticationApi.Repositories
 			return cipherUser;
 		}
 
-		private string Encrypt(string plainText)
+		public string Encrypt(string plainText)
 		{
 			try
 			{
@@ -62,7 +62,15 @@ namespace AuthenticationApi.Repositories
 
 				var plainTextBytes = Encoding.UTF8.GetBytes(plainText);
 				var encryptedBytes = rsaEngine.ProcessBlock(plainTextBytes, 0, plainTextBytes.Length);
-				return Convert.ToBase64String(encryptedBytes);
+
+				// Şifrelenmiş veriyi URL dostu hale getir
+				var base64EncryptedData = Convert.ToBase64String(encryptedBytes);
+				var urlSafeEncryptedData = base64EncryptedData
+					.Replace("+", "-")
+					.Replace("/", "_")
+					.TrimEnd('=');
+
+				return urlSafeEncryptedData;
 			}
 			catch (Exception)
 			{

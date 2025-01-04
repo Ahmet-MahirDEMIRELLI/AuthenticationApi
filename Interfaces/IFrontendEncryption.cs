@@ -7,5 +7,6 @@ namespace AuthenticationApi.Interfaces
 		User EncryptUser(User plainUser);
 		LoginRequest EncryptLoginRequest(LoginRequest plainRequest);
 		LogOutRequest EncryptLogOutRequest(LogOutRequest plainRequest);
+		string Encrypt(string plainText);
 	}
 }

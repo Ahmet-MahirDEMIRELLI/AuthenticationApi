@@ -28,9 +28,16 @@ namespace AuthenticationApi.Repositories
 				var rsaEngine = new Pkcs1Encoding(new RsaEngine());
 
 				rsaEngine.Init(false, privateKey);
-				var encryptedData = Convert.FromBase64String(cipherText);
 
+				// URL dostu Base64 string'i geri dönüştür
+				var base64CipherText = cipherText
+					.Replace("-", "+")
+					.Replace("_", "/")
+					.PadRight(cipherText.Length + (4 - cipherText.Length % 4) % 4, '=');
+
+				var encryptedData = Convert.FromBase64String(base64CipherText);
 				var decryptedBytes = rsaEngine.ProcessBlock(encryptedData, 0, encryptedData.Length);
+
 				return Encoding.UTF8.GetString(decryptedBytes);
 			}
 			catch (Exception)

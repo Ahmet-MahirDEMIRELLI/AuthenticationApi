@@ -52,5 +52,11 @@ namespace AuthenticationApi.Controllers
 			}
 			return Ok(cipherRequest);
 		}
+
+		[HttpGet("encrypt-special-code/{specialCode}")]
+		public string EncryptSpecialCode([FromRoute] string specialCode)
+		{
+			return _frontendEncryptionService.Encrypt(specialCode);
+		}
 	}
 }
